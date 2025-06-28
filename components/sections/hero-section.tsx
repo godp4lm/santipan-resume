@@ -100,9 +100,9 @@ export function HeroSection() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.5, delay: 0.5 }}
-              className={`w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-r ${primaryGradient} p-1`}
+              className={`w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto mb-6 rounded-full bg-gradient-to-r ${primaryGradient} p-1`}
             >
-              <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-4xl font-bold text-white">
+              <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-2xl sm:text-3xl md:text-4xl font-bold text-white">
                 {heroData.avatar.initials}
               </div>
             </motion.div>
@@ -111,7 +111,7 @@ export function HeroSection() {
 
         {/* Typewriter Name */}
         <motion.div variants={itemVariants} className="mb-4">
-          <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent min-h-[1.2em]">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent min-h-[1.2em]">
             <TypewriterText
               text={heroData.name}
               speed={120}
@@ -124,7 +124,7 @@ export function HeroSection() {
 
         {/* Typewriter Title */}
         <motion.div variants={itemVariants} className="mb-6">
-          <h2 className="text-xl md:text-2xl font-medium min-h-[1.5em]">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-medium min-h-[1.5em]">
             {showTitle && (
               <TypewriterText
                 text={heroData.title}
@@ -146,7 +146,7 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mb-8"
         >
-          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
             {heroData.description}
           </p>
         </motion.div>
@@ -173,11 +173,11 @@ export function HeroSection() {
                   variant={button.type === "primary" ? "default" : "outline"}
                   className={
                     button.type === "primary"
-                      ? `bg-gradient-to-r ${primaryGradient} hover:opacity-90 text-black font-semibold px-8 py-3 rounded-xl transition-all duration-300`
-                      : "border-gray-600 text-white hover:bg-white/10 px-8 py-3 rounded-xl transition-all duration-300 bg-transparent"
+                      ? `bg-gradient-to-r ${primaryGradient} hover:opacity-90 text-black font-semibold px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl transition-all duration-300 text-sm sm:text-base`
+                      : "border-gray-600 text-white hover:bg-white/10 px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl transition-all duration-300 bg-transparent text-sm sm:text-base"
                   }
                 >
-                  <Icon className="mr-2 h-5 w-5" />
+                  <Icon className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                   {button.text}
                 </Button>
               </motion.div>
@@ -192,7 +192,7 @@ export function HeroSection() {
             showDescription ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
           }
           transition={{ duration: 0.6, delay: 0.9 }}
-          className="flex justify-center space-x-6"
+          className="flex justify-center space-x-4 sm:space-x-6"
         >
           {heroData.socialLinks.map((social, index) => {
             const Icon = iconMap[social.icon as keyof typeof iconMap];
@@ -205,9 +205,9 @@ export function HeroSection() {
                 transition={{ duration: 0.3, delay: 1.2 + index * 0.1 }}
                 whileHover={{ scale: 1.2, y: -2 }}
                 whileTap={{ scale: 0.9 }}
-                className={`p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300 text-gray-400 ${social.color}`}
+                className={`p-2.5 sm:p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300 text-gray-400 ${social.color}`}
               >
-                <Icon className="h-6 w-6" />
+                <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
               </motion.a>
             );
           })}

@@ -106,7 +106,7 @@ export function ProjectsSection() {
           </div>
 
           {/* View Mode Toggle */}
-          <div className="flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2">
             <Button
               variant="outline"
               size="sm"
