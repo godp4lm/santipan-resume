@@ -22,7 +22,7 @@ export default function Home() {
     // Enhanced smooth scroll behavior
     document.documentElement.style.scrollBehavior = "smooth";
 
-    // JavaScript fallback for smooth scrolling
+    // JavaScript fallback for smooth scrolling with better performance
     const handleSmoothScroll = (e: Event) => {
       const target = e.target as HTMLElement;
       const href = target.getAttribute("href");
@@ -32,26 +32,34 @@ export default function Home() {
         const targetElement = document.querySelector(href);
 
         if (targetElement) {
-          targetElement.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-            inline: "nearest",
+          // Use requestAnimationFrame for better performance
+          requestAnimationFrame(() => {
+            targetElement.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+              inline: "nearest",
+            });
           });
         }
       }
     };
 
-    // Add smooth scroll to all anchor links
-    const anchorLinks = document.querySelectorAll('a[href^="#"]');
-    anchorLinks.forEach((link) => {
-      link.addEventListener("click", handleSmoothScroll);
-    });
+    // Add smooth scroll to all anchor links with better event delegation
+    const handleClick = (e: Event) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest('a[href^="#"]');
+
+      if (link) {
+        handleSmoothScroll(e);
+      }
+    };
+
+    // Use event delegation for better performance
+    document.addEventListener("click", handleClick, { passive: false });
 
     return () => {
       // Cleanup event listeners
-      anchorLinks.forEach((link) => {
-        link.removeEventListener("click", handleSmoothScroll);
-      });
+      document.removeEventListener("click", handleClick);
     };
   }, []);
 

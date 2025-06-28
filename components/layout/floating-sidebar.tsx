@@ -41,7 +41,14 @@ export function FloatingSidebar() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      // Use requestAnimationFrame for better performance
+      requestAnimationFrame(() => {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "nearest",
+        });
+      });
       setActiveSection(sectionId);
       // Close mobile menu after navigation
       setIsMobileMenuOpen(false);

@@ -34,9 +34,12 @@ export function FloatingBackToTop() {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
+    // Use requestAnimationFrame for better performance
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     });
   };
 

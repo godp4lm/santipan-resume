@@ -45,7 +45,10 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
 
   // Scroll to top when component mounts
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Use requestAnimationFrame for better performance
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
   }, []);
 
   const nextImage = () => {
@@ -89,7 +92,13 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                   setTimeout(() => {
                     const projectsSection = document.getElementById("projects");
                     if (projectsSection) {
-                      projectsSection.scrollIntoView({ behavior: "smooth" });
+                      requestAnimationFrame(() => {
+                        projectsSection.scrollIntoView({
+                          behavior: "smooth",
+                          block: "start",
+                          inline: "nearest",
+                        });
+                      });
                     }
                   }, 100);
                 }}
