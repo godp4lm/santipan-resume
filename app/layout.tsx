@@ -19,7 +19,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   metadataBase: new URL("https://santipan.dev"),
   title: {
-    default: "Santipan Sunee | Full Stack Developer & Digital Creator",
+    default: "Santipan Sunee | Full Stack Developer",
     template: "%s | Santipan Sunee",
   },
   description:
@@ -34,7 +34,6 @@ export const metadata: Metadata = {
     "Frontend Development",
     "Backend Development",
     "UI/UX Design",
-    "Digital Creator",
     "Thailand Developer",
     "Freelance Developer",
     "Modern Web Technologies",
@@ -54,7 +53,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://santipan.dev",
     siteName: "Santipan Sunee Portfolio",
-    title: "Santipan Sunee | Full Stack Developer & Digital Creator",
+    title: "Santipan Sunee | Full Stack Developer",
     description:
       "Passionate Full Stack Developer crafting exceptional digital experiences with modern technologies. Specialized in React, Next.js, Node.js, and innovative web solutions.",
     images: [
@@ -70,7 +69,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@santipan_dev",
     creator: "@santipan_dev",
-    title: "Santipan Sunee | Full Stack Developer & Digital Creator",
+    title: "Santipan Sunee | Full Stack Developer",
     description:
       "Passionate Full Stack Developer crafting exceptional digital experiences with modern technologies. Specialized in React, Next.js, Node.js, and innovative web solutions.",
     images: ["/og-image.png"],
