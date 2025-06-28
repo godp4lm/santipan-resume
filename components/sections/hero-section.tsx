@@ -1,11 +1,12 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { motion, easeOut, easeInOut } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Download, ExternalLink, Github, Linkedin, Mail } from "lucide-react"
-import { TypewriterText } from "@/components/typewriter-text"
-import { heroData } from "@/data/hero.data"
+import { useEffect, useState } from "react";
+import { motion, easeOut, easeInOut } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Download, ExternalLink, Github, Linkedin, Mail } from "lucide-react";
+import { TypewriterText } from "@/components/typewriter-text";
+import { heroData } from "@/data/hero.data";
+import { useTheme } from "@/components/theme-provider";
 
 const iconMap = {
   Download,
@@ -13,17 +14,22 @@ const iconMap = {
   Github,
   Linkedin,
   Mail,
-}
+};
 
 export function HeroSection() {
-  const [showTitle, setShowTitle] = useState(false)
-  const [showDescription, setShowDescription] = useState(false)
-  const [isClient, setIsClient] = useState(false)
+  const [showTitle, setShowTitle] = useState(false);
+  const [showDescription, setShowDescription] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const { colors, isMounted } = useTheme();
 
   useEffect(() => {
-    setIsClient(true)
-  }, [])
+    setIsClient(true);
+  }, []);
 
+  // Use default colors until mounted to prevent hydration mismatch
+  const primaryGradient = isMounted
+    ? colors.primary
+    : "from-cyan-400 to-blue-500";
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -34,7 +40,7 @@ export function HeroSection() {
         delayChildren: 0.3,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
@@ -43,35 +49,45 @@ export function HeroSection() {
       y: 0,
       transition: { duration: 0.6, ease: easeOut },
     },
-  }
+  };
 
   return (
-    <section id="hero" className="min-h-screen flex items-center justify-center px-6">
-       {/* Background gradient */}
-       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 " />
+    <section
+      id="hero"
+      className="min-h-screen flex items-center justify-center px-6"
+    >
+      {/* Background gradient - adjusted for theme */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 to-transparent" />
 
-{/* Animated background elements */}
-<div className="absolute inset-0 overflow-hidden">
-  {isClient &&
-    [...Array(20)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute w-1 h-1 bg-white/20 rounded-full"
-        initial={{
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
-        }}
-        animate={{
-          y: [null, -100, window.innerHeight + 100],
-        }}
-        transition={{
-          duration: Math.random() * 10 + 10,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "linear",
-        }}
-      />
-    ))}
-</div>
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        {isClient &&
+          [...Array(20)].map((_, i) => {
+            // Use deterministic positioning to avoid hydration mismatch
+            const x = (i * 100) % 1200; // Fixed positions based on index
+            const y = (i * 50) % 800;
+            const duration = 10 + (i % 10);
+
+            return (
+              <motion.div
+                key={i}
+                className="absolute w-1 h-1 bg-white/20 rounded-full"
+                initial={{
+                  x: x,
+                  y: y,
+                }}
+                animate={{
+                  y: [y, y - 100, 900],
+                }}
+                transition={{
+                  duration: duration,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "linear",
+                }}
+              />
+            );
+          })}
+      </div>
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -84,7 +100,7 @@ export function HeroSection() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.5, delay: 0.5 }}
-              className={`w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-r ${heroData.avatar.gradient} p-1`}
+              className={`w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-r ${primaryGradient} p-1`}
             >
               <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-4xl font-bold text-white">
                 {heroData.avatar.initials}
@@ -115,7 +131,7 @@ export function HeroSection() {
                 speed={80}
                 delay={500}
                 onComplete={() => setShowDescription(true)}
-                className="text-cyan-400"
+                className={`bg-gradient-to-r ${primaryGradient} bg-clip-text text-transparent`}
               />
             )}
           </h2>
@@ -124,30 +140,40 @@ export function HeroSection() {
         {/* Description */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={showDescription ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          animate={
+            showDescription ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+          }
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mb-8"
         >
-          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">{heroData.description}</p>
+          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            {heroData.description}
+          </p>
         </motion.div>
 
         {/* Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={showDescription ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          animate={
+            showDescription ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+          }
           transition={{ duration: 0.6, delay: 0.6 }}
           className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
         >
           {heroData.buttons.map((button, index) => {
-            const Icon = iconMap[button.icon as keyof typeof iconMap]
+            const Icon = iconMap[button.icon as keyof typeof iconMap];
             return (
-              <motion.div key={button.text} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <motion.div
+                key={button.text}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <Button
                   size="lg"
                   variant={button.type === "primary" ? "default" : "outline"}
                   className={
                     button.type === "primary"
-                      ? "bg-cyan-500 hover:bg-cyan-600 text-black font-semibold px-8 py-3 rounded-xl transition-all duration-300"
+                      ? `bg-gradient-to-r ${primaryGradient} hover:opacity-90 text-black font-semibold px-8 py-3 rounded-xl transition-all duration-300`
                       : "border-gray-600 text-white hover:bg-white/10 px-8 py-3 rounded-xl transition-all duration-300 bg-transparent"
                   }
                 >
@@ -155,19 +181,21 @@ export function HeroSection() {
                   {button.text}
                 </Button>
               </motion.div>
-            )
+            );
           })}
         </motion.div>
 
         {/* Social Links */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={showDescription ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          animate={
+            showDescription ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+          }
           transition={{ duration: 0.6, delay: 0.9 }}
           className="flex justify-center space-x-6"
         >
           {heroData.socialLinks.map((social, index) => {
-            const Icon = iconMap[social.icon as keyof typeof iconMap]
+            const Icon = iconMap[social.icon as keyof typeof iconMap];
             return (
               <motion.a
                 key={social.platform}
@@ -181,7 +209,7 @@ export function HeroSection() {
               >
                 <Icon className="h-6 w-6" />
               </motion.a>
-            )
+            );
           })}
         </motion.div>
 
@@ -192,19 +220,29 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 1.5 }}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
         >
-        <motion.div
-  animate={{ y: [0, 10, 0] }}
-  transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: easeInOut, type: "tween" }} // เพิ่ม type: "tween"
-  className="w-6 h-10 border-2 border-gray-600 rounded-full flex justify-center"
->
-  <motion.div
-    animate={{ y: [0, 12, 0] }}
-    transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: easeInOut, type: "tween" }} // เพิ่ม type: "tween"
-    className="w-1 h-3 bg-cyan-400 rounded-full mt-2"
-  />
-</motion.div>
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{
+              duration: 2,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: easeInOut,
+              type: "tween",
+            }}
+            className="w-6 h-10 border-2 border-gray-600 rounded-full flex justify-center"
+          >
+            <motion.div
+              animate={{ y: [0, 12, 0] }}
+              transition={{
+                duration: 2,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: easeInOut,
+                type: "tween",
+              }}
+              className="w-1 h-3 bg-gray-400 rounded-full mt-2"
+            />
+          </motion.div>
         </motion.div>
       </motion.div>
     </section>
-  )
+  );
 }

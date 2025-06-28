@@ -8,19 +8,31 @@ import { Button } from "@/components/ui/button";
 import { ExternalLink, Github, Grid, List } from "lucide-react";
 import { projectsData, type Project } from "@/data/projects.data";
 import { useRouter } from "next/navigation";
+import { useTheme } from "@/components/theme-provider";
 
 export function ProjectsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const router = useRouter();
+  const { colors, isMounted } = useTheme();
 
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    "All"
+  );
   const [showAll, setShowAll] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [hoveredProject, setHoveredProject] = useState<string | null>(null);
+
+  // Use default colors until mounted to prevent hydration mismatch
+  const primaryGradient = isMounted
+    ? colors.primary
+    : "from-cyan-400 to-blue-500";
 
   const filteredProjects = projectsData.projects.filter(
     (project) =>
-      selectedCategory === "All" || project.category === selectedCategory
+      selectedCategory === "All" ||
+      selectedCategory === null ||
+      project.category === selectedCategory
   );
 
   const displayedProjects = showAll
@@ -44,30 +56,34 @@ export function ProjectsSection() {
   };
 
   return (
-    <section id="projects" className="py-20 px-6">
-      <div className="container mx-auto max-w-7xl">
+    <section id="projects" className="py-16 px-6">
+      <div className="container mx-auto max-w-6xl">
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+          <h2
+            className={`text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r ${primaryGradient} bg-clip-text text-transparent`}
+          >
             {projectsData.title}
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto rounded-full" />
-          <p className="text-gray-300 mt-6 text-lg max-w-2xl mx-auto">
+          <div
+            className={`w-20 h-1 bg-gradient-to-r ${primaryGradient} mx-auto rounded-full`}
+          />
+          <p className="text-gray-300 mt-4 text-base max-w-2xl mx-auto">
             {projectsData.description}
           </p>
         </motion.div>
 
         {/* Controls */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6 relative z-10"
+          className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 relative z-10"
         >
           {/* Category Filter */}
           <div className="flex flex-wrap gap-2">
@@ -79,7 +95,7 @@ export function ProjectsSection() {
                 onClick={() => handleCategoryChange(category)}
                 className={`rounded-full transition-all duration-300 cursor-pointer ${
                   selectedCategory === category
-                    ? "bg-cyan-500 text-black hover:bg-cyan-600"
+                    ? `bg-gradient-to-r ${primaryGradient} text-black hover:opacity-90`
                     : "border-gray-600 text-gray-300 hover:bg-white/10 bg-transparent"
                 }`}
                 style={{ position: "relative", zIndex: 20 }}
@@ -111,14 +127,14 @@ export function ProjectsSection() {
         <AnimatePresence mode="wait">
           <motion.div
             key={`${selectedCategory}-${viewMode}-${showAll}`}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.4 }}
             className={
               viewMode === "grid"
-                ? "grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-                : "space-y-6"
+                ? "grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+                : "space-y-4"
             }
           >
             {displayedProjects.map((project, index) => (
@@ -137,16 +153,16 @@ export function ProjectsSection() {
         {/* Show More/Less Button */}
         {filteredProjects.length > 6 && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
             transition={{ duration: 0.4, delay: 0.6 }}
-            className="text-center mt-12"
+            className="text-center mt-8"
           >
             <Button
               onClick={() => setShowAll(!showAll)}
               size="lg"
               variant="outline"
-              className="border-gray-600 text-white hover:bg-white/10 bg-transparent px-8 py-3 rounded-xl cursor-pointer"
+              className="border-gray-600 text-white hover:bg-white/10 bg-transparent px-6 py-3 rounded-xl cursor-pointer"
               style={{ position: "relative", zIndex: 20 }}
             >
               {showAll
@@ -158,10 +174,10 @@ export function ProjectsSection() {
 
         {/* Project Stats */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
+          className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4"
         >
           {[
             { label: "Total Projects", count: projectsData.projects.length },
@@ -175,12 +191,14 @@ export function ProjectsSection() {
           ].map((stat, index) => (
             <div
               key={stat.label}
-              className="text-center p-6 bg-gray-900/30 rounded-2xl border border-gray-800"
+              className="text-center p-4 bg-gray-900/30 rounded-xl border border-gray-800"
             >
-              <div className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
+              <div
+                className={`text-xl font-bold bg-gradient-to-r ${primaryGradient} bg-clip-text text-transparent mb-1`}
+              >
                 {stat.count}+
               </div>
-              <div className="text-gray-400 text-sm">{stat.label}</div>
+              <div className="text-gray-400 text-xs">{stat.label}</div>
             </div>
           ))}
         </motion.div>
@@ -224,7 +242,9 @@ function ProjectCard({
             >
               <div className="relative overflow-hidden rounded-xl">
                 <img
-                  src={project.images?.[0] || "/placeholder.svg"}
+                  src={
+                    project.cover || project.images?.[0] || "/placeholder.svg"
+                  }
                   alt={project.title}
                   className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
                 />
@@ -320,9 +340,9 @@ function ProjectCard({
           >
             <div className="relative overflow-hidden rounded-xl mb-6">
               <img
-                src={project.images?.[0] || "/placeholder.svg"}
+                src={project.cover || project.images?.[0] || "/placeholder.svg"}
                 alt={project.title}
-                className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                className="w-full h-60 object-cover transition-transform duration-300 group-hover:scale-105"
               />
               {project.featured && (
                 <div className="absolute top-3 right-3 px-2 py-1 bg-cyan-500 text-black text-xs font-medium rounded-full">

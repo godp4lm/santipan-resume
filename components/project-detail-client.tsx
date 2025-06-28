@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
 import {
   ArrowLeft,
   ExternalLink,
@@ -16,33 +16,56 @@ import {
   Target,
   Lightbulb,
   TrendingUp,
-} from "lucide-react"
-import Link from "next/link"
-import type { Project } from "@/data/projects.data"
+  Play,
+  Pause,
+} from "lucide-react";
+import Link from "next/link";
+import type { Project } from "@/data/projects.data";
 
 interface ProjectDetailClientProps {
-  project: Project
+  project: Project;
 }
 
+// Helper function to check if media is video
+const isVideo = (mediaUrl: string) => {
+  const videoExtensions = [".mp4", ".webm", ".ogg", ".mov", ".avi"];
+  return videoExtensions.some((ext) => mediaUrl.toLowerCase().includes(ext));
+};
+
+// Helper function to get media type
+const getMediaType = (mediaUrl: string) => {
+  if (isVideo(mediaUrl)) return "video";
+  return "image";
+};
+
 export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   // Scroll to top when component mounts
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }, [])
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % project.images.length)
-  }
+    setCurrentImageIndex((prev) => (prev + 1) % project.images.length);
+    setIsVideoPlaying(false); // Pause video when changing media
+  };
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + project.images.length) % project.images.length)
-  }
+    setCurrentImageIndex(
+      (prev) => (prev - 1 + project.images.length) % project.images.length
+    );
+    setIsVideoPlaying(false); // Pause video when changing media
+  };
 
   const goToImage = (index: number) => {
-    setCurrentImageIndex(index)
-  }
+    setCurrentImageIndex(index);
+    setIsVideoPlaying(false); // Pause video when changing media
+  };
+
+  const currentMedia = project.images[currentImageIndex];
+  const isCurrentMediaVideo = isVideo(currentMedia);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -63,11 +86,11 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                 onClick={() => {
                   // Smooth scroll to projects section when going back
                   setTimeout(() => {
-                    const projectsSection = document.getElementById("projects")
+                    const projectsSection = document.getElementById("projects");
                     if (projectsSection) {
-                      projectsSection.scrollIntoView({ behavior: "smooth" })
+                      projectsSection.scrollIntoView({ behavior: "smooth" });
                     }
-                  }, 100)
+                  }, 100);
                 }}
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
@@ -83,7 +106,11 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                   className="border-gray-600 text-white hover:bg-white/10 bg-transparent"
                   asChild
                 >
-                  <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <ExternalLink className="mr-2 h-4 w-4" />
                     Live Demo
                   </a>
@@ -96,7 +123,11 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                   className="border-gray-600 text-white hover:bg-white/10 bg-transparent"
                   asChild
                 >
-                  <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Github className="mr-2 h-4 w-4" />
                     View Code
                   </a>
@@ -135,7 +166,9 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
             {project.title}
           </h1>
 
-          <p className="text-xl text-gray-300 leading-relaxed max-w-3xl mb-8">{project.overview}</p>
+          <p className="text-xl text-gray-300 leading-relaxed max-w-3xl mb-8">
+            {project.overview}
+          </p>
 
           {/* Project Meta */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -166,7 +199,9 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Team Size</p>
-                  <p className="text-white font-medium">{project.teamSize} people</p>
+                  <p className="text-white font-medium">
+                    {project.teamSize} people
+                  </p>
                 </div>
               </div>
             )}
@@ -183,7 +218,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
           </div>
         </motion.div>
 
-        {/* Image Carousel */}
+        {/* Media Carousel */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -193,16 +228,60 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
           <div className="relative bg-gray-900/50 rounded-2xl overflow-hidden border border-gray-800">
             <div className="relative aspect-video">
               <AnimatePresence mode="wait">
-                <motion.img
+                <motion.div
                   key={currentImageIndex}
-                  src={project.images[currentImageIndex]}
-                  alt={`${project.title} - Image ${currentImageIndex + 1}`}
                   initial={{ opacity: 0, scale: 1.1 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.5 }}
-                  className="w-full h-full object-cover"
-                />
+                  className="w-full h-full"
+                >
+                  {isCurrentMediaVideo ? (
+                    <div className="relative w-full h-full">
+                      <video
+                        src={currentMedia}
+                        className="w-full h-full object-cover"
+                        controls={false}
+                        autoPlay={isVideoPlaying}
+                        loop
+                        muted
+                        playsInline
+                        onPlay={() => setIsVideoPlaying(true)}
+                        onPause={() => setIsVideoPlaying(false)}
+                      />
+                      {/* Video Play/Pause Overlay */}
+                      <button
+                        onClick={() => {
+                          const video = document.querySelector(
+                            "video"
+                          ) as HTMLVideoElement;
+                          if (video) {
+                            if (isVideoPlaying) {
+                              video.pause();
+                            } else {
+                              video.play();
+                            }
+                          }
+                        }}
+                        className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 transition-all duration-300"
+                      >
+                        <div className="p-4 bg-black/50 rounded-full">
+                          {isVideoPlaying ? (
+                            <Pause className="h-8 w-8 text-white" />
+                          ) : (
+                            <Play className="h-8 w-8 text-white ml-1" />
+                          )}
+                        </div>
+                      </button>
+                    </div>
+                  ) : (
+                    <img
+                      src={currentMedia}
+                      alt={`${project.title} - Image ${currentImageIndex + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                </motion.div>
               </AnimatePresence>
 
               {/* Navigation Arrows */}
@@ -210,22 +289,27 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                 <>
                   <button
                     onClick={prevImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition-all duration-300"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition-all duration-300 z-10"
                   >
                     <ChevronLeft className="h-6 w-6 text-white" />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition-all duration-300"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition-all duration-300 z-10"
                   >
                     <ChevronRight className="h-6 w-6 text-white" />
                   </button>
                 </>
               )}
 
-              {/* Image Counter */}
-              <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/70 rounded-full text-white text-sm">
+              {/* Media Counter */}
+              <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/70 rounded-full text-white text-sm z-10">
                 {currentImageIndex + 1} / {project.images.length}
+              </div>
+
+              {/* Media Type Indicator */}
+              <div className="absolute top-4 left-4 px-2 py-1 bg-black/70 rounded-full text-white text-xs z-10">
+                {isCurrentMediaVideo ? "VIDEO" : "IMAGE"}
               </div>
             </div>
 
@@ -233,21 +317,36 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
             {project.images.length > 1 && (
               <div className="p-4 bg-gray-900/30">
                 <div className="flex gap-2 overflow-x-auto">
-                  {project.images.map((image, index) => (
-                    <button
-                      key={index}
-                      onClick={() => goToImage(index)}
-                      className={`flex-shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-                        index === currentImageIndex ? "border-cyan-400" : "border-gray-600 hover:border-gray-500"
-                      }`}
-                    >
-                      <img
-                        src={image || "/placeholder.svg"}
-                        alt={`Thumbnail ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </button>
-                  ))}
+                  {project.images.map((media, index) => {
+                    const isVideo = getMediaType(media) === "video";
+                    return (
+                      <button
+                        key={index}
+                        onClick={() => goToImage(index)}
+                        className={`relative flex-shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
+                          index === currentImageIndex
+                            ? "border-cyan-400"
+                            : "border-gray-600 hover:border-gray-500"
+                        }`}
+                      >
+                        {isVideo ? (
+                          <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                            <Play className="h-4 w-4 text-white" />
+                          </div>
+                        ) : (
+                          <img
+                            src={media}
+                            alt={`Thumbnail ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        )}
+                        {/* Video indicator on thumbnail */}
+                        {isVideo && (
+                          <div className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -270,7 +369,9 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                 </div>
                 <h2 className="text-2xl font-bold text-white">The Challenge</h2>
               </div>
-              <p className="text-gray-300 leading-relaxed text-lg">{project.challenge}</p>
+              <p className="text-gray-300 leading-relaxed text-lg">
+                {project.challenge}
+              </p>
             </motion.section>
 
             {/* Solution */}
@@ -285,7 +386,9 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                 </div>
                 <h2 className="text-2xl font-bold text-white">The Solution</h2>
               </div>
-              <p className="text-gray-300 leading-relaxed text-lg">{project.solution}</p>
+              <p className="text-gray-300 leading-relaxed text-lg">
+                {project.solution}
+              </p>
             </motion.section>
 
             {/* Results */}
@@ -298,7 +401,9 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                 <div className="p-2 bg-green-500/20 rounded-lg">
                   <TrendingUp className="h-6 w-6 text-green-400" />
                 </div>
-                <h2 className="text-2xl font-bold text-white">Results & Impact</h2>
+                <h2 className="text-2xl font-bold text-white">
+                  Results & Impact
+                </h2>
               </div>
               <div className="space-y-4">
                 {project.results.map((result, index) => (
@@ -346,7 +451,9 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
               transition={{ duration: 0.6, delay: 0.7 }}
               className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800"
             >
-              <h3 className="text-xl font-bold text-white mb-4">Key Features</h3>
+              <h3 className="text-xl font-bold text-white mb-4">
+                Key Features
+              </h3>
               <div className="space-y-2">
                 {project.features.map((feature, index) => (
                   <div key={index} className="flex items-center gap-2">
@@ -370,7 +477,11 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                   className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-black font-semibold"
                   asChild
                 >
-                  <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <ExternalLink className="mr-2 h-5 w-5" />
                     View Live Project
                   </a>
@@ -383,7 +494,11 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                   className="w-full border-gray-600 text-white hover:bg-white/10 bg-transparent"
                   asChild
                 >
-                  <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Github className="mr-2 h-5 w-5" />
                     View Source Code
                   </a>
@@ -394,5 +509,5 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
         </div>
       </main>
     </div>
-  )
+  );
 }

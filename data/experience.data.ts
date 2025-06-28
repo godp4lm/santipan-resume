@@ -1,44 +1,33 @@
 export const experiences = [
   {
-    title: "Senior Full Stack Developer",
-    company: "TechCorp Solutions",
-    location: "San Francisco, CA",
-    period: "2022 - Present",
+    title: "Full Stack Developer Internship",
+    company: "Thaidotrun Company Limited",
+    location: "Bangkok, Thailand",
+    period: "2024 - 2025",
     description:
-      "Lead development of scalable web applications serving 100K+ users. Architected microservices infrastructure and mentored junior developers.",
+      "Worked as a Full Stack Developer Intern involved in multiple web application projects. Participated in all stages from UX/UI design, system architecture, database design, frontend/backend development, and deployment.",
     achievements: [
-      "Reduced application load time by 40% through optimization",
-      "Led team of 5 developers on major product redesign",
-      "Implemented CI/CD pipeline reducing deployment time by 60%",
+      "Contributed to 3 real-world web projects during internship",
+      "Designed user interfaces and built responsive components using React and Tailwind CSS",
+      "Collaborated in planning system architecture and API specifications",
+      "Developed backend features using Node.js and NestJS",
+      "Configured deployment pipelines using Firebase and Cloudflare Pages",
     ],
     gradient: "from-cyan-400 to-blue-500",
   },
   {
     title: "Full Stack Developer",
-    company: "StartupXYZ",
-    location: "Austin, TX",
-    period: "2020 - 2022",
+    company: "Thaidotrun Company Limited",
+    location: "Bangkok, Thailand",
+    period: "2025 - Present",
     description:
-      "Developed MVP and scaled platform from 0 to 50K users. Built responsive web applications and RESTful APIs.",
+      "Continue to work as a Full Stack Developer responsible for end-to-end development of web platforms. Engage in design, development, and deployment across multiple ongoing projects.",
     achievements: [
-      "Built core platform features from scratch",
-      "Integrated payment processing and user authentication",
-      "Optimized database queries improving performance by 50%",
+      "Designing and implementing frontend applications with Next.js and React",
+      "Building backend services using NestJS, Express, and Drizzle ORM",
+      "Designing and managing databases using MongoDB, SQL, and Supabase",
+      "Collaborating in system and UX/UI design processes across teams",
     ],
     gradient: "from-green-400 to-emerald-500",
   },
-  {
-    title: "Frontend Developer",
-    company: "Digital Agency Pro",
-    location: "Remote",
-    period: "2019 - 2020",
-    description:
-      "Created responsive websites and web applications for various clients. Collaborated with design teams to implement pixel-perfect UIs.",
-    achievements: [
-      "Delivered 20+ client projects on time and budget",
-      "Improved website performance scores by average 35%",
-      "Established component library used across projects",
-    ],
-    gradient: "from-purple-400 to-pink-500",
-  },
-]
+];
