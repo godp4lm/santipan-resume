@@ -1,8 +1,8 @@
 export const heroData = {
-  name: "Santipan Sunee",
+  name: "Hi, I'm Santipan Sunee ",
   title: "Full Stack Developer",
   avatar: {
-    initials: "AJ",
+    initials: "SS",
     gradient: "from-cyan-400 to-blue-500",
   },
   description:

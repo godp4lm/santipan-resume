@@ -10,21 +10,21 @@ export const contactData = {
     {
       icon: "Mail",
       label: "Email",
-      value: "alex.johnson@email.com",
-      href: "mailto:alex.johnson@email.com",
+      value: "santipan.game@gmail.com",
+      href: "mailto:santipan.game@gmail.com",
       description: "Best way to reach me",
     },
     {
       icon: "Phone",
       label: "Phone",
-      value: "+1 (555) 123-4567",
-      href: "tel:+15551234567",
-      description: "Available Mon-Fri, 9AM-6PM PST",
+      value: "+66 91-845-6138",
+      href: "tel:+66918456138",
+      description: "Available Mon-Fri, 9AM-6PM ICT",
     },
     {
       icon: "MapPin",
       label: "Location",
-      value: "San Francisco, CA",
+      value: "Phatthalung, Thailand",
       href: "#",
       description: "Open to remote work worldwide",
     },
@@ -40,7 +40,7 @@ export const contactData = {
     {
       platform: "GitHub",
       icon: "Github",
-      href: "https://github.com/alexjohnson",
+      href: "https://github.com/santipan2003",
       color: "hover:text-gray-300",
     },
     {
@@ -60,21 +60,24 @@ export const contactData = {
     {
       icon: "Coffee",
       title: "Exciting Projects",
-      description: "Full-stack web applications, SaaS platforms, and innovative digital solutions",
+      description:
+        "Full-stack web applications, SaaS platforms, and innovative digital solutions",
     },
     {
       icon: "MessageCircle",
       title: "Great Collaboration",
-      description: "Working with passionate teams who value quality, creativity, and user experience",
+      description:
+        "Working with passionate teams who value quality, creativity, and user experience",
     },
     {
       icon: "Calendar",
       title: "Long-term Partnerships",
-      description: "Building lasting relationships with clients and contributing to their success",
+      description:
+        "Building lasting relationships with clients and contributing to their success",
     },
   ],
   stats: [
     { label: "Response Rate", value: "100%" },
     { label: "Project Success", value: "98%" },
   ],
-}
+};

@@ -1,33 +1,47 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { useInView } from "framer-motion"
-import { useRef } from "react"
-import { Button } from "@/components/ui/button"
-import { ExternalLink, Github, Grid, List } from "lucide-react"
-import { projectsData, type Project } from "@/data/projects.data"
-import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { ExternalLink, Github, Grid, List } from "lucide-react";
+import { projectsData, type Project } from "@/data/projects.data";
+import { useRouter } from "next/navigation";
 
 export function ProjectsSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
-  const router = useRouter()
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const router = useRouter();
 
-  const [selectedCategory, setSelectedCategory] = useState("All")
-  const [showAll, setShowAll] = useState(false)
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [showAll, setShowAll] = useState(false);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const filteredProjects = projectsData.projects.filter(
-    (project) => selectedCategory === "All" || project.category === selectedCategory,
-  )
+    (project) =>
+      selectedCategory === "All" || project.category === selectedCategory
+  );
 
-  const displayedProjects = showAll ? filteredProjects : filteredProjects.slice(0, 6)
-  const featuredProjects = projectsData.projects.filter((project) => project.featured)
+  const displayedProjects = showAll
+    ? filteredProjects
+    : filteredProjects.slice(0, 6);
+  const featuredProjects = projectsData.projects.filter(
+    (project) => project.featured
+  );
 
   const handleProjectClick = (projectId: string) => {
-    router.push(`/${projectId}`)
-  }
+    router.push(`/${projectId}`);
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setShowAll(false); // Reset show all when changing category
+  };
+
+  const handleViewModeToggle = () => {
+    setViewMode(viewMode === "grid" ? "list" : "grid");
+  };
 
   return (
     <section id="projects" className="py-20 px-6">
@@ -43,7 +57,9 @@ export function ProjectsSection() {
             {projectsData.title}
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto rounded-full" />
-          <p className="text-gray-300 mt-6 text-lg max-w-2xl mx-auto">{projectsData.description}</p>
+          <p className="text-gray-300 mt-6 text-lg max-w-2xl mx-auto">
+            {projectsData.description}
+          </p>
         </motion.div>
 
         {/* Controls */}
@@ -51,7 +67,7 @@ export function ProjectsSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6"
+          className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6 relative z-10"
         >
           {/* Category Filter */}
           <div className="flex flex-wrap gap-2">
@@ -60,12 +76,13 @@ export function ProjectsSection() {
                 key={category}
                 variant={selectedCategory === category ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSelectedCategory(category)}
-                className={`rounded-full transition-all duration-300 ${
+                onClick={() => handleCategoryChange(category)}
+                className={`rounded-full transition-all duration-300 cursor-pointer ${
                   selectedCategory === category
                     ? "bg-cyan-500 text-black hover:bg-cyan-600"
                     : "border-gray-600 text-gray-300 hover:bg-white/10 bg-transparent"
                 }`}
+                style={{ position: "relative", zIndex: 20 }}
               >
                 {category}
               </Button>
@@ -77,10 +94,15 @@ export function ProjectsSection() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
-              className="border-gray-600 text-gray-300 hover:bg-white/10 bg-transparent"
+              onClick={handleViewModeToggle}
+              className="border-gray-600 text-gray-300 hover:bg-white/10 bg-transparent cursor-pointer"
+              style={{ position: "relative", zIndex: 20 }}
             >
-              {viewMode === "grid" ? <List className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
+              {viewMode === "grid" ? (
+                <List className="h-4 w-4" />
+              ) : (
+                <Grid className="h-4 w-4" />
+              )}
             </Button>
           </div>
         </motion.div>
@@ -93,7 +115,11 @@ export function ProjectsSection() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}
-            className={viewMode === "grid" ? "grid md:grid-cols-2 lg:grid-cols-3 gap-8" : "space-y-6"}
+            className={
+              viewMode === "grid"
+                ? "grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+                : "space-y-6"
+            }
           >
             {displayedProjects.map((project, index) => (
               <ProjectCard
@@ -120,9 +146,12 @@ export function ProjectsSection() {
               onClick={() => setShowAll(!showAll)}
               size="lg"
               variant="outline"
-              className="border-gray-600 text-white hover:bg-white/10 bg-transparent px-8 py-3 rounded-xl"
+              className="border-gray-600 text-white hover:bg-white/10 bg-transparent px-8 py-3 rounded-xl cursor-pointer"
+              style={{ position: "relative", zIndex: 20 }}
             >
-              {showAll ? "Show Less" : `View All Projects (${filteredProjects.length})`}
+              {showAll
+                ? "Show Less"
+                : `View All Projects (${filteredProjects.length})`}
             </Button>
           </motion.div>
         )}
@@ -137,10 +166,17 @@ export function ProjectsSection() {
           {[
             { label: "Total Projects", count: projectsData.projects.length },
             { label: "Featured", count: featuredProjects.length },
-            { label: "Technologies", count: [...new Set(projectsData.projects.flatMap((p) => p.tech))].length },
+            {
+              label: "Technologies",
+              count: [...new Set(projectsData.projects.flatMap((p) => p.tech))]
+                .length,
+            },
             { label: "Categories", count: projectsData.categories.length - 1 },
           ].map((stat, index) => (
-            <div key={stat.label} className="text-center p-6 bg-gray-900/30 rounded-2xl border border-gray-800">
+            <div
+              key={stat.label}
+              className="text-center p-6 bg-gray-900/30 rounded-2xl border border-gray-800"
+            >
               <div className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
                 {stat.count}+
               </div>
@@ -150,18 +186,24 @@ export function ProjectsSection() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }
 
 interface ProjectCardProps {
-  project: Project
-  index: number
-  viewMode: "grid" | "list"
-  isInView: boolean
-  onProjectClick: (projectId: string) => void
+  project: Project;
+  index: number;
+  viewMode: "grid" | "list";
+  isInView: boolean;
+  onProjectClick: (projectId: string) => void;
 }
 
-function ProjectCard({ project, index, viewMode, isInView, onProjectClick }: ProjectCardProps) {
+function ProjectCard({
+  project,
+  index,
+  viewMode,
+  isInView,
+  onProjectClick,
+}: ProjectCardProps) {
   if (viewMode === "list") {
     return (
       <motion.div
@@ -176,7 +218,10 @@ function ProjectCard({ project, index, viewMode, isInView, onProjectClick }: Pro
           />
 
           <div className="grid md:grid-cols-3 gap-6 p-6">
-            <div className="block cursor-pointer" onClick={() => onProjectClick(project.id)}>
+            <div
+              className="block cursor-pointer"
+              onClick={() => onProjectClick(project.id)}
+            >
               <div className="relative overflow-hidden rounded-xl">
                 <img
                   src={project.images?.[0] || "/placeholder.svg"}
@@ -197,7 +242,9 @@ function ProjectCard({ project, index, viewMode, isInView, onProjectClick }: Pro
                   </h3>
                   <span className="text-xs text-gray-500">{project.year}</span>
                 </div>
-                <p className="text-gray-300 text-sm leading-relaxed">{project.description}</p>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  {project.description}
+                </p>
               </div>
 
               <div className="flex flex-wrap gap-2">
@@ -219,7 +266,11 @@ function ProjectCard({ project, index, viewMode, isInView, onProjectClick }: Pro
                     className="border-gray-600 text-white hover:bg-white/10 bg-transparent"
                     asChild
                   >
-                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ExternalLink className="mr-2 h-3 w-3" />
                       Live Demo
                     </a>
@@ -232,7 +283,11 @@ function ProjectCard({ project, index, viewMode, isInView, onProjectClick }: Pro
                     className="border-gray-600 text-white hover:bg-white/10 bg-transparent"
                     asChild
                   >
-                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <Github className="mr-2 h-3 w-3" />
                       Code
                     </a>
@@ -243,7 +298,7 @@ function ProjectCard({ project, index, viewMode, isInView, onProjectClick }: Pro
           </div>
         </div>
       </motion.div>
-    )
+    );
   }
 
   return (
@@ -259,7 +314,10 @@ function ProjectCard({ project, index, viewMode, isInView, onProjectClick }: Pro
         />
 
         <div className="relative p-6 h-full flex flex-col">
-          <div className="block cursor-pointer" onClick={() => onProjectClick(project.id)}>
+          <div
+            className="block cursor-pointer"
+            onClick={() => onProjectClick(project.id)}
+          >
             <div className="relative overflow-hidden rounded-xl mb-6">
               <img
                 src={project.images?.[0] || "/placeholder.svg"}
@@ -285,7 +343,9 @@ function ProjectCard({ project, index, viewMode, isInView, onProjectClick }: Pro
                 </h3>
                 <span className="text-xs text-gray-500">{project.year}</span>
               </div>
-              <p className="text-gray-300 text-sm leading-relaxed">{project.description}</p>
+              <p className="text-gray-300 text-sm leading-relaxed">
+                {project.description}
+              </p>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -313,7 +373,11 @@ function ProjectCard({ project, index, viewMode, isInView, onProjectClick }: Pro
                 className="flex-1 border-gray-600 text-white hover:bg-white/10 bg-transparent"
                 asChild
               >
-                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <ExternalLink className="mr-2 h-4 w-4" />
                   Live Demo
                 </a>
@@ -326,7 +390,11 @@ function ProjectCard({ project, index, viewMode, isInView, onProjectClick }: Pro
                 className="flex-1 border-gray-600 text-white hover:bg-white/10 bg-transparent"
                 asChild
               >
-                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Github className="mr-2 h-4 w-4" />
                   Code
                 </a>
@@ -336,5 +404,5 @@ function ProjectCard({ project, index, viewMode, isInView, onProjectClick }: Pro
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
