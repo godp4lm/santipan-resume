@@ -1,27 +1,30 @@
-import { notFound } from "next/navigation"
-import { ProjectDetailClient } from "@/components/project-detail-client"
-import { projectsData } from "@/data/projects.data"
-import type { Metadata } from "next"
+import { notFound } from "next/navigation";
+import { ProjectDetailClient } from "@/components/project-detail-client";
+import { projectsData } from "@/data/projects.data";
+import type { Metadata } from "next";
+import { Footer } from "@/components/layout/footer";
 
 interface ProjectPageProps {
   params: {
-    projectId: string
-  }
+    projectId: string;
+  };
 }
 
 export async function generateStaticParams() {
   return projectsData.projects.map((project) => ({
     projectId: project.id,
-  }))
+  }));
 }
 
-export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
-  const project = projectsData.projects.find((p) => p.id === params.projectId)
+export async function generateMetadata({
+  params,
+}: ProjectPageProps): Promise<Metadata> {
+  const project = projectsData.projects.find((p) => p.id === params.projectId);
 
   if (!project) {
     return {
       title: "Project Not Found",
-    }
+    };
   }
 
   return {
@@ -32,15 +35,19 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
       description: project.description,
       images: project.images.slice(0, 1),
     },
-  }
+  };
 }
 
 export default function ProjectPage({ params }: ProjectPageProps) {
-  const project = projectsData.projects.find((p) => p.id === params.projectId)
+  const project = projectsData.projects.find((p) => p.id === params.projectId);
 
   if (!project) {
-    notFound()
+    notFound();
   }
 
-  return <ProjectDetailClient project={project} />
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <ProjectDetailClient project={project} />
+    </div>
+  );
 }

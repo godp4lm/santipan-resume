@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type { Project } from "@/data/projects.data";
+import { Footer } from "@/components/layout/footer";
 
 interface ProjectDetailClientProps {
   project: Project;
@@ -529,6 +530,9 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
           </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
