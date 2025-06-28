@@ -156,41 +156,6 @@ export function ContactSection() {
                 );
               })}
             </div>
-
-            {/* Social Links */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.4, delay: 0.9 }}
-              className="pt-2"
-            >
-              <h4 className="text-lg font-semibold text-white mb-4">
-                Connect With Me
-              </h4>
-              <div className="flex space-x-3">
-                {contactData.socialLinks.map((social, index) => {
-                  const Icon = iconMap[social.icon as keyof typeof iconMap];
-                  return (
-                    <motion.a
-                      key={social.platform}
-                      href={social.href}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={
-                        isInView
-                          ? { opacity: 1, scale: 1 }
-                          : { opacity: 0, scale: 0.8 }
-                      }
-                      transition={{ duration: 0.3, delay: 1.0 + index * 0.1 }}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`p-3 bg-gradient-to-br from-white/8 to-white/3 backdrop-blur-xl rounded-xl border border-white/15 hover:border-white/30 transition-all duration-300 shadow-lg group ${social.color}`}
-                    >
-                      <Icon className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
-                    </motion.a>
-                  );
-                })}
-              </div>
-            </motion.div>
           </motion.div>
 
           {/* Right Column - CTA & Looking For */}
@@ -269,38 +234,6 @@ export function ContactSection() {
                 <MessageCircle className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
                 Start a Conversation
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full border-white/15 text-white hover:bg-white/8 hover:border-white/25 py-4 rounded-xl transition-all duration-300 backdrop-blur-sm group"
-              >
-                <Download className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
-                Download Resume
-              </Button>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-              transition={{ duration: 0.4, delay: 1.2 }}
-              className="grid grid-cols-2 gap-3"
-            >
-              {contactData.stats.map((stat, index) => (
-                <div
-                  key={stat.label}
-                  className="text-center p-3 bg-gradient-to-br from-white/3 to-white/1 backdrop-blur-sm rounded-xl border border-white/8"
-                >
-                  <div
-                    className={`text-lg font-bold bg-gradient-to-r ${primaryGradient} bg-clip-text text-transparent mb-1`}
-                  >
-                    {stat.value}
-                  </div>
-                  <div className="text-gray-400 text-xs font-medium">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
             </motion.div>
           </motion.div>
         </div>

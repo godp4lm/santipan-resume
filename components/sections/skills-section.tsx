@@ -30,14 +30,14 @@ export function SkillsSection() {
 
   // Simplified animation variants for better performance
   const fadeInUp = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 10 },
     visible: { opacity: 1, y: 0 },
   };
 
   const staggerContainer = {
     visible: {
       transition: {
-        staggerChildren: 0.05,
+        staggerChildren: 0.02, // Reduced from 0.05
       },
     },
   };
@@ -129,9 +129,9 @@ export function SkillsSection() {
                 key={tech.name}
                 variants={fadeInUp}
                 whileHover={{
-                  y: -4,
-                  scale: 1.02,
-                  transition: { duration: 0.15 },
+                  y: -2,
+                  scale: 1.01,
+                  transition: { duration: 0.1 },
                 }}
                 className="group relative"
               >
@@ -192,17 +192,14 @@ export function SkillsSection() {
           ))}
         </motion.div>
 
-        {/* Skills Grid */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          className="space-y-8"
-        >
+        {/* Skills Grid - Optimized */}
+        <div className="space-y-6">
           {filteredCategories.map((category, categoryIndex) => (
             <motion.div
               key={category.title}
-              variants={fadeInUp}
+              initial={{ opacity: 0, y: 15 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+              transition={{ duration: 0.3, delay: 0.4 + categoryIndex * 0.1 }}
               className="relative"
             >
               {/* Category Header */}
@@ -224,43 +221,101 @@ export function SkillsSection() {
                 </div>
               </div>
 
-              {/* Skills Grid */}
+              {/* Skills Grid - Using CSS Grid with reduced animations */}
               <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
                 {category.technologies.map((tech, techIndex) => (
-                  <motion.div
+                  <div
                     key={tech.name}
-                    variants={fadeInUp}
-                    whileHover={{
-                      y: -2,
-                      scale: 1.01,
-                      transition: { duration: 0.1 },
+                    className="group relative transform transition-all duration-200 hover:-translate-y-1 hover:scale-[1.02]"
+                    style={{
+                      animationDelay: `${
+                        categoryIndex * 0.1 + techIndex * 0.02
+                      }s`,
+                      animation: isInView
+                        ? "fadeInUp 0.3s ease-out forwards"
+                        : "none",
+                      opacity: isInView ? 1 : 0,
+                      transform: isInView
+                        ? "translateY(0)"
+                        : "translateY(10px)",
                     }}
-                    className="group relative"
                   >
-                    <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-lg border border-white/20 p-3 shadow transition-all duration-200 group-hover:border-white/40 group-hover:bg-white/15">
-                      <div className="flex items-center gap-2">
-                        <div className="text-xl group-hover:scale-110 transition-transform duration-200">
+                    <div className="relative bg-gradient-to-br from-gray-900/80 via-gray-800/60 to-gray-900/80 backdrop-blur-xl rounded-xl border border-gray-700/50 p-4 shadow-lg transition-all duration-300 group-hover:border-gray-600/70 group-hover:bg-gradient-to-br group-hover:from-gray-800/90 group-hover:via-gray-700/70 group-hover:to-gray-800/90 group-hover:shadow-xl">
+                      {/* Subtle gradient overlay */}
+                      <div
+                        className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-0 group-hover:opacity-5 rounded-xl transition-opacity duration-300`}
+                      />
+
+                      <div className="flex items-center gap-3 relative z-10">
+                        <div className="text-2xl group-hover:scale-110 transition-transform duration-300 group-hover:drop-shadow-lg">
                           {tech.logo}
                         </div>
-                        <div className="flex-1">
-                          <h4 className="font-bold text-white text-sm mb-1">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-bold text-white text-sm mb-2 group-hover:text-gray-100 transition-colors duration-200 truncate">
                             {tech.name}
                           </h4>
                           <Badge
                             variant="secondary"
-                            className="text-[10px] bg-white/20 text-white border-white/30 backdrop-blur-sm px-2 py-0.5"
+                            className={`text-[10px] font-medium px-2.5 py-1 rounded-full border-0 shadow-sm transition-all duration-200 group-hover:scale-105 ${
+                              tech.category === "Language"
+                                ? "bg-blue-500/20 text-blue-300 border-blue-500/30"
+                                : tech.category === "Framework"
+                                ? "bg-purple-500/20 text-purple-300 border-purple-500/30"
+                                : tech.category === "Database"
+                                ? "bg-green-500/20 text-green-300 border-green-500/30"
+                                : tech.category === "Styling"
+                                ? "bg-pink-500/20 text-pink-300 border-pink-500/30"
+                                : tech.category === "UI Library"
+                                ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/30"
+                                : tech.category === "Animation"
+                                ? "bg-orange-500/20 text-orange-300 border-orange-500/30"
+                                : tech.category === "API"
+                                ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/30"
+                                : tech.category === "Runtime"
+                                ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+                                : tech.category === "ORM"
+                                ? "bg-teal-500/20 text-teal-300 border-teal-500/30"
+                                : tech.category === "Real-time"
+                                ? "bg-yellow-500/20 text-yellow-300 border-yellow-500/30"
+                                : tech.category === "Backend"
+                                ? "bg-red-500/20 text-red-300 border-red-500/30"
+                                : tech.category === "Services"
+                                ? "bg-violet-500/20 text-violet-300 border-violet-500/30"
+                                : tech.category === "Payment"
+                                ? "bg-rose-500/20 text-rose-300 border-rose-500/30"
+                                : tech.category === "Platform"
+                                ? "bg-sky-500/20 text-sky-300 border-sky-500/30"
+                                : tech.category === "Cache"
+                                ? "bg-amber-500/20 text-amber-300 border-amber-500/30"
+                                : tech.category === "Container"
+                                ? "bg-lime-500/20 text-lime-300 border-lime-500/30"
+                                : tech.category === "Tunneling"
+                                ? "bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/30"
+                                : tech.category === "Design"
+                                ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/30"
+                                : tech.category === "Management"
+                                ? "bg-slate-500/20 text-slate-300 border-slate-500/30"
+                                : tech.category === "Version Control"
+                                ? "bg-gray-500/20 text-gray-300 border-gray-500/30"
+                                : "bg-gray-600/20 text-gray-300 border-gray-600/30"
+                            }`}
                           >
                             {tech.category}
                           </Badge>
                         </div>
                       </div>
+
+                      {/* Hover effect glow */}
+                      <div
+                        className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-0 group-hover:opacity-10 rounded-xl transition-opacity duration-300 blur-sm`}
+                      />
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
 
         {/* Summary Stats */}
         <motion.div
@@ -323,6 +378,20 @@ export function SkillsSection() {
           ))}
         </motion.div>
       </div>
+
+      {/* CSS Animation for better performance */}
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </section>
   );
 }

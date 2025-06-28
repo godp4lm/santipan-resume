@@ -6,7 +6,7 @@ export const heroData = {
     gradient: "from-cyan-400 to-blue-500",
   },
   description:
-    "Crafting exceptional digital experiences with modern technologies. Specialized in React, Next.js, Node.js, and cloud architecture.",
+    "Blending creativity with code to craft digital products people love to use.",
   buttons: [
     {
       text: "Download Resume",
@@ -41,4 +41,4 @@ export const heroData = {
       color: "hover:text-cyan-400",
     },
   ],
-}
+};

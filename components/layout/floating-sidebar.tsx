@@ -23,6 +23,15 @@ const navigationItems = [
   { id: "contact", label: "Contact", icon: Mail },
 ];
 
+// Mobile navigation items with Home in center
+const mobileNavigationItems = [
+  { id: "about", label: "About", icon: User },
+  { id: "skills", label: "Skills", icon: Code },
+  { id: "hero", label: "Home", icon: Home },
+  { id: "projects", label: "Projects", icon: FolderOpen },
+  { id: "contact", label: "Contact", icon: Mail },
+];
+
 export function FloatingSidebar() {
   const [activeSection, setActiveSection] = useState("hero");
   const [isHovered, setIsHovered] = useState(false);
@@ -260,7 +269,7 @@ export function FloatingSidebar() {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="fixed top-6 left-6 z-[101] lg:hidden"
+        className="fixed top-6 left-6 z-[101] hidden md:block lg:hidden"
       >
         <Button
           variant="ghost"
@@ -291,7 +300,7 @@ export function FloatingSidebar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[99] lg:hidden"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[99] hidden md:block lg:hidden"
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
@@ -307,7 +316,7 @@ export function FloatingSidebar() {
                 stiffness: 300,
                 damping: 30,
               }}
-              className="fixed left-0 top-0 h-full w-80 bg-black/80 backdrop-blur-xl border-r border-gray-800 z-[100] lg:hidden shadow-2xl"
+              className="fixed left-0 top-0 h-full w-80 bg-black/80 backdrop-blur-xl border-r border-gray-800 z-[100] hidden md:block lg:hidden shadow-2xl"
             >
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-800">
@@ -377,7 +386,7 @@ export function FloatingSidebar() {
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="fixed bottom-0 left-0 right-0 z-[100] md:hidden"
+        className="fixed bottom-0 left-0 right-0 z-[100] block md:hidden"
       >
         <div className="bg-black/40 backdrop-blur-xl shadow-2xl">
           {/* Background Glow */}
@@ -385,7 +394,7 @@ export function FloatingSidebar() {
 
           {/* Navigation Items */}
           <div className="relative flex items-center justify-around px-4 py-3 safe-area-inset-bottom">
-            {navigationItems.map((item, index) => (
+            {mobileNavigationItems.map((item, index) => (
               <motion.button
                 key={item.id}
                 initial={{ opacity: 0, y: 20 }}
