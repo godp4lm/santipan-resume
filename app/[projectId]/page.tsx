@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { ProjectDetailClient } from "@/components/project-detail-client";
 import { projectsData } from "@/data/projects.data";
 import type { Metadata } from "next";
-import { Footer } from "@/components/layout/footer";
 
 interface ProjectPageProps {
   params: {
@@ -23,17 +22,53 @@ export async function generateMetadata({
 
   if (!project) {
     return {
-      title: "Project Not Found",
+      title: "Project Not Found | Santipan Sunee",
+      description: "The requested project could not be found.",
     };
   }
 
   return {
-    title: `${project.title} - Alex Johnson`,
-    description: project.description,
+    title: `${project.title} | Project Showcase`,
+    description: `${project.description} - ${project.overview}`,
+    keywords: [
+      ...project.tech,
+      "Project Showcase",
+      "Portfolio",
+      "Web Development",
+      "Full Stack Development",
+      "React",
+      "Next.js",
+      "TypeScript",
+      "UI/UX Design",
+    ],
     openGraph: {
-      title: project.title,
-      description: project.description,
-      images: project.images.slice(0, 1),
+      title: `${project.title} | Project Showcase`,
+      description: `${project.description} - ${project.overview}`,
+      type: "article",
+      url: `https://santipan.dev/projects/${project.id}`,
+      images: [
+        {
+          url: project.images[0] || "/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: `${project.title} - Project Screenshot`,
+        },
+      ],
+      siteName: "Santipan Sunee Portfolio",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${project.title} | Project Showcase`,
+      description: `${project.description} - ${project.overview}`,
+      images: [project.images[0] || "/og-image.png"],
+    },
+    alternates: {
+      canonical: `https://santipan.dev/projects/${project.id}`,
+    },
+    other: {
+      "article:published_time": project.year,
+      "article:section": "Projects",
+      "article:tag": project.tech,
     },
   };
 }
