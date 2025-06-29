@@ -18,6 +18,7 @@ import {
   TrendingUp,
   Play,
   Pause,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import type { Project } from "@/data/projects.data";
@@ -27,7 +28,7 @@ interface ProjectDetailClientProps {
   project: Project;
 }
 
-// Helper function to check if media is video
+// Helper function to check ifmedia is video
 const isVideo = (mediaUrl: string) => {
   const videoExtensions = [".mp4", ".webm", ".ogg", ".mov", ".avi"];
   return videoExtensions.some((ext) => mediaUrl.toLowerCase().includes(ext));
@@ -42,6 +43,7 @@ const getMediaType = (mediaUrl: string) => {
 export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -261,7 +263,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                     <div className="relative w-full h-full">
                       <video
                         src={currentMedia}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover cursor-pointer"
                         controls={false}
                         autoPlay={isVideoPlaying}
                         loop
@@ -269,6 +271,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                         playsInline
                         onPlay={() => setIsVideoPlaying(true)}
                         onPause={() => setIsVideoPlaying(false)}
+                        onClick={() => setIsPreviewOpen(true)}
                       />
                       {/* Video Play/Pause Overlay */}
                       <button
@@ -294,13 +297,52 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                           )}
                         </div>
                       </button>
+                      {/* Fullscreen Preview Button */}
+                      <button
+                        onClick={() => setIsPreviewOpen(true)}
+                        className="absolute bottom-3 right-3 bg-black/60 hover:bg-black/80 rounded-full p-2 z-20"
+                        title="Preview Fullscreen"
+                      >
+                        <svg
+                          width="22"
+                          height="22"
+                          fill="none"
+                          stroke="white"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4" />
+                        </svg>
+                      </button>
                     </div>
                   ) : (
-                    <img
-                      src={currentMedia}
-                      alt={`${project.title} - Image ${currentImageIndex + 1}`}
-                      className="w-full h-full object-cover"
-                    />
+                    <div className="relative w-full h-full">
+                      <img
+                        src={currentMedia}
+                        alt={`${project.title} - Image ${
+                          currentImageIndex + 1
+                        }`}
+                        className="w-full h-full object-cover cursor-pointer"
+                        onClick={() => setIsPreviewOpen(true)}
+                      />
+                      {/* Fullscreen Preview Button */}
+                      <button
+                        onClick={() => setIsPreviewOpen(true)}
+                        className="absolute bottom-3 right-3 bg-black/60 hover:bg-black/80 rounded-full p-2 z-20"
+                        title="Preview Fullscreen"
+                      >
+                        <svg
+                          width="22"
+                          height="22"
+                          fill="none"
+                          stroke="white"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4" />
+                        </svg>
+                      </button>
+                    </div>
                   )}
                 </motion.div>
               </AnimatePresence>
@@ -324,7 +366,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
               )}
 
               {/* Media Counter */}
-              <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 px-2 sm:px-3 py-1 bg-black/70 rounded-full text-white text-xs sm:text-sm z-10">
+              <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 px-2 sm:px-3 py-1 bg-black/70 rounded-full text-white text-xs sm:text-sm z-10">
                 {currentImageIndex + 1} / {project.images.length}
               </div>
 
@@ -351,8 +393,17 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                         }`}
                       >
                         {isVideo ? (
-                          <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                            <Play className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+                          <div className="w-full h-full bg-gray-800 flex items-center justify-center relative">
+                            <video
+                              src={media}
+                              className="w-full h-full object-cover"
+                              muted
+                              playsInline
+                              preload="metadata"
+                              tabIndex={-1}
+                              style={{ pointerEvents: "none" }}
+                            />
+                            <Play className="h-3 w-3 sm:h-4 sm:w-4 text-white absolute left-1 top-1" />
                           </div>
                         ) : (
                           <img
@@ -373,6 +424,61 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
             )}
           </div>
         </motion.div>
+
+        {/* Fullscreen Preview Modal */}
+        {isPreviewOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm">
+            <button
+              className="absolute top-4 right-4 bg-black/60 hover:bg-black/80 rounded-full p-2 z-20"
+              onClick={() => setIsPreviewOpen(false)}
+              title="Close Preview"
+            >
+              <X className="h-6 w-6 text-white" />
+            </button>
+            {/* Navigation Arrows */}
+            {project.images.length > 1 && (
+              <>
+                <button
+                  onClick={prevImage}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/60 hover:bg-black/80 rounded-full z-20"
+                >
+                  <ChevronLeft className="h-8 w-8 text-white" />
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/60 hover:bg-black/80 rounded-full z-20"
+                >
+                  <ChevronRight className="h-8 w-8 text-white" />
+                </button>
+              </>
+            )}
+            <div className="max-w-5xl w-full flex items-center justify-center">
+              {isCurrentMediaVideo ? (
+                <video
+                  src={currentMedia}
+                  className="w-full max-h-[80vh] rounded-xl bg-black"
+                  controls
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  style={{ background: "black" }}
+                />
+              ) : (
+                <img
+                  src={currentMedia}
+                  alt={`Preview - ${project.title}`}
+                  className="w-full max-h-[80vh] rounded-xl object-contain bg-black"
+                  style={{ background: "black" }}
+                />
+              )}
+            </div>
+            {/* Media Counter */}
+            <div className="absolute bottom-6 right-6 px-3 py-1 bg-black/70 rounded-full text-white text-sm z-20">
+              {currentImageIndex + 1} / {project.images.length}
+            </div>
+          </div>
+        )}
 
         {/* Content Sections */}
         <div className="grid lg:grid-cols-3 gap-8 sm:gap-12">
