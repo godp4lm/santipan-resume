@@ -44,6 +44,7 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isVideoHovered, setIsVideoHovered] = useState(false);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -260,7 +261,11 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                   className="w-full h-full"
                 >
                   {isCurrentMediaVideo ? (
-                    <div className="relative w-full h-full">
+                    <div
+                      className="relative w-full h-full"
+                      onMouseEnter={() => setIsVideoHovered(true)}
+                      onMouseLeave={() => setIsVideoHovered(false)}
+                    >
                       <video
                         src={currentMedia}
                         className="w-full h-full object-cover cursor-pointer"
@@ -274,29 +279,32 @@ export function ProjectDetailClient({ project }: ProjectDetailClientProps) {
                         onClick={() => setIsPreviewOpen(true)}
                       />
                       {/* Video Play/Pause Overlay */}
-                      <button
-                        onClick={() => {
-                          const video = document.querySelector(
-                            "video"
-                          ) as HTMLVideoElement;
-                          if (video) {
-                            if (isVideoPlaying) {
-                              video.pause();
-                            } else {
-                              video.play();
+                      {(!isVideoPlaying || isVideoHovered) && (
+                        <button
+                          onClick={() => {
+                            const video = document.querySelector(
+                              "video"
+                            ) as HTMLVideoElement;
+                            if (video) {
+                              if (isVideoPlaying) {
+                                video.pause();
+                              } else {
+                                video.play();
+                              }
                             }
-                          }
-                        }}
-                        className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 transition-all duration-300"
-                      >
-                        <div className="p-3 sm:p-4 bg-black/50 rounded-full">
-                          {isVideoPlaying ? (
-                            <Pause className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
-                          ) : (
-                            <Play className="h-6 w-6 sm:h-8 sm:w-8 text-white ml-0.5 sm:ml-1" />
-                          )}
-                        </div>
-                      </button>
+                          }}
+                          className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 transition-all duration-300"
+                          style={{ pointerEvents: "auto" }}
+                        >
+                          <div className="p-3 sm:p-4 bg-black/50 rounded-full">
+                            {isVideoPlaying ? (
+                              <Pause className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+                            ) : (
+                              <Play className="h-6 w-6 sm:h-8 sm:w-8 text-white ml-0.5 sm:ml-1" />
+                            )}
+                          </div>
+                        </button>
+                      )}
                       {/* Fullscreen Preview Button */}
                       <button
                         onClick={() => setIsPreviewOpen(true)}
