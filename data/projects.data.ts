@@ -26,7 +26,7 @@ export interface Project {
 export const projectsData = {
   title: "Featured Projects",
   description: "A showcase of my recent work and personal projects",
-  categories: ["All", "Web Applications"],
+  categories: ["All", "Web Applications", "E-Commerce"],
   projects: [
     {
       id: "ultratopspin-table-tennis",
@@ -146,7 +146,7 @@ export const projectsData = {
       githubUrl: "https://github.com/santipan/facial-recognition-photos",
       gradient: "from-blue-400 to-indigo-500",
       featured: true,
-      category: "Web Applications",
+      category: "E-Commerce",
       year: 2025,
       status: "completed" as const,
       duration: "2 months",
@@ -214,7 +214,7 @@ export const projectsData = {
       githubUrl: "https://github.com/santipan/tofu-pos-system",
       gradient: "from-green-400 to-emerald-500",
       featured: true,
-      category: "Web Applications",
+      category: "E-Commerce",
       year: 2025,
       status: "completed" as const,
       duration: "1 month",
