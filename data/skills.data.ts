@@ -20,8 +20,6 @@ export const techCategories = [
       { name: "Ant Design", category: "UI Library", logo: "🐜" },
       // Animation
       { name: "Framer Motion", category: "Animation", logo: "🎭" },
-      // API
-      { name: "GraphQL", category: "API", logo: "🔗" },
       // Mobile
       { name: "React Native", category: "Mobile", logo: "📱" },
     ],
@@ -33,7 +31,6 @@ export const techCategories = [
     technologies: [
       // Language
       { name: "PHP", category: "Language", logo: "🐘" },
-      { name: "Python", category: "Language", logo: "🐍" },
       // Runtime
       { name: "Node.js", category: "Runtime", logo: "🟢" },
       // Framework
@@ -48,12 +45,11 @@ export const techCategories = [
       // Database
       { name: "SQL", category: "Database", logo: "🗄️" },
       { name: "MongoDB", category: "Database", logo: "🍃" },
-      { name: "MongoDB Atlas", category: "Database", logo: "☁️" },
       { name: "Cloudflare D1", category: "Database", logo: "☁️" },
       { name: "Firebase Firestore", category: "Database", logo: "🔥" },
       // Backend Services
       { name: "Firebase", category: "Services", logo: "🔥" },
-      { name: "Supabase", category: "Backend", logo: "⚡" },
+      { name: "Supabase", category: "Database", logo: "⚡" },
       // Payment
       { name: "Omise", category: "Payment", logo: "💳" },
       { name: "Square", category: "Payment", logo: "⬜" },
@@ -75,8 +71,6 @@ export const techCategories = [
       { name: "ngrok", category: "Tunneling", logo: "🌐" },
       // Database (Cloud)
       { name: "MongoDB Atlas", category: "Database", logo: "☁️" },
-      { name: "Cloudflare D1", category: "Database", logo: "☁️" },
-      { name: "Supabase", category: "Database", logo: "⚡" },
       // Cache
       { name: "Cloudflare KV", category: "Cache", logo: "☁️" },
     ],
